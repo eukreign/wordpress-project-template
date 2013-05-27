@@ -1,0 +1,4 @@
+[trusted]
+users = root, [Project User]
+[paths]
+default = ssh://hg@bitbucket.org/graftonweb/[Project Name]

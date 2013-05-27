@@ -1,7 +1,7 @@
 wp db create
 wp core install\
-    --url=[Project URL]\
-    --title=[Project Title]\
-    --admin_name=lex\
-    --admin_password=lex_pass\
-    --admin_email=lex@graftonweb.com
+    --url=http://[Project URL]\
+    --title="[Project Title]"\
+    --admin_name=[Project User]\
+    --admin_password=[Project User]\
+    --admin_email=[Project User]@graftonweb.com
