@@ -1,3 +1,4 @@
+from uuid import uuid4
 from os import getcwd
 from getpass import getuser
 from os.path import join, exists
@@ -28,6 +29,7 @@ def create():
         local("mv %s %s" % (theme_tpl, theme))
 
         do_string_replacement([
+            '.htaccess',
             'hgrc',
             'create.sh',
             'local.wp-config.php',
@@ -38,6 +40,7 @@ def create():
 
         local("rm -rf .git")
         local("rm -rf "+join(theme, '.git'))
+        local("rm wp-config-sample.php")
         local("rm .gitignore")
         local("rm .gitmodules")
         local("rm "+join(theme, '.gitignore'))
@@ -65,6 +68,7 @@ def do_string_replacement(files):
         'URL': env.project_url,
         'User': env.project_user
     }
+    tplvars.update([('Random Key %s'%i, uuid4()) for i in range(1,10)])
     sed = ';'.join([r's/\[Project %s\]/%s/g'%(key,val)
                     for key,val in tplvars.items()])
     for tpl in files:
