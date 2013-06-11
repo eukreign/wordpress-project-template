@@ -5,9 +5,6 @@ from os.path import join, exists
 from fabric.api import local, lcd, prompt, env, abort
 
 def create():
-    #local("git submodule init")
-    #local("git submodule update")
-
     prompt("Project Title:", "project_title", validate=nonempty)
     prompt("Project Name:", "project_name",
             clean(env.project_title), nonempty)
@@ -22,11 +19,12 @@ def create():
     local("cp -r %s %s" % (getcwd(), path))
 
     with lcd(path):
-        themes = 'wp-content/themes/'
-        theme_tpl = join(themes,'wordpress-theme-template')
-        theme     = join(themes,env.project_name)
+        theme_tpl = join('../', 'wordpress-theme-template')
+        theme  = join('wp-content/themes/',env.project_name)
 
-        local("mv %s %s" % (theme_tpl, theme))
+        local("cp -r %s %s" % (theme_tpl, theme))
+
+        local("mv project-fabfile.py fabfile.py")
 
         do_string_replacement([
             '.htaccess',
@@ -35,6 +33,7 @@ def create():
             'local.wp-config.php',
             'production.wp-config.php',
             'wp-cli.yml',
+            'fabfile.py',
             join(theme, 'style.css')
         ])
 
@@ -42,7 +41,6 @@ def create():
         local("rm -rf "+join(theme, '.git'))
         local("rm wp-config-sample.php")
         local("rm .gitignore")
-        local("rm .gitmodules")
         local("rm "+join(theme, '.gitignore'))
         local("rm "+join(theme, '.editorconfig'))
 
@@ -52,6 +50,8 @@ def create():
         local("hg commit -m'initial import'")
 
         local("cp local.wp-config.php wp-config.php")
+
+        local("cp -r ../wordpress wordpress")
 
 def clean(t):
     return t.strip().lower().replace(' ','')
